@@ -14,5 +14,10 @@ start_link(App) ->
 
 init(App) ->
     {ok, {{one_for_one, 3, 10},
-          [{echo, {echo, start_link, [App]},
-            permanent, 10, worker, [echo]}]}}.
+          [{echo,
+            {echo, start_link, [App]},
+            permanent,
+            10,
+            worker,
+            [echo]}
+          ]}}.

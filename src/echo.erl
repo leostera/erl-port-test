@@ -23,8 +23,8 @@
 -record(state, {port}).
 
 %% External
-start_link(ExternalProgram) ->
-    gen_server:start_link({local, ?MODULE}, echo, ExternalProgram).
+start_link(App) ->
+    gen_server:start_link(echo, [App], []).
 
 %% API
 

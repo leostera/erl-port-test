@@ -38,6 +38,10 @@ sanitize(Message) ->
 get_timeout() ->
     {ok, Value} = application:get_env(echo_app, timeout),
     Value.
+
+get_maxline() ->
+    {ok, Value} = application:get_env(echo_app, maxline),
+    Value.
    
 is_newline_terminated([]) -> false;
 is_newline_terminated([$\n]) -> true;
@@ -47,3 +51,8 @@ count_chars(Char, Message) ->
     length([X || X <- Message, X == Char]).
 
 %% gen_server callbacks
+
+init(App) ->
+    process_flag(trap_exit, true),
+    Port = open_port({spawn, App}, [stream, {line, get_maxline()}]),
+    {ok, #state{port=Port}}.

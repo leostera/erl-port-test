@@ -10,6 +10,6 @@ clean:
 	rm -rf ./ebin/*.beam
 
 run: all
-	erl -pa ./ebin
+	erl -pa ../echo_app/ebin
 
 .PHONY: clean run

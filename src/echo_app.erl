@@ -14,3 +14,7 @@ start(_Type, _Args) ->
     PrivDir = code:priv_dir(echo_app),
     {ok, App} = application:get_env(echo_app, app),
     echo_sup:start_link(filename:join([PrivDir, App])).
+
+stop(_WhoCares) ->
+    % seriously, we don't care.
+    ok.

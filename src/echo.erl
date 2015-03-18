@@ -52,3 +52,26 @@ init(App) ->
     process_flag(trap_exit, true),
     Port = open_port({spawn, App}, [stream, {line, get_config(maxline)}]),
     {ok, #state{port=Port}}.
+
+handle_call({echo, Msg}, _From, #state{port = Port} = State) ->
+    port_command(Port, Msg),
+    case collect_response(Port) of
+        {response, Response} -> {reply, Response, State};
+        timeout -> {stop, port_timeout, State}
+    end.
+
+collect_response(Port) -> collect_response(Port, [], []).
+
+collect_response(Port, RespAcc, LineAcc) ->
+    receive 
+        {Port, {data, {eol, "OK"}}} ->
+            {response, lists:reverse(RespAcc)};
+        {Port, {data, {eol, Result}}} ->
+            Line = lists:reverse([Result|LineAcc]),
+            {response, lists:reverse([Line|RespAcc])};
+        {Port, {data, {noel, Result}}} ->
+            collect_response(Port, RespAcc, [Result|LineAcc])
+    after get_config(timeout) ->
+          timeout
+    end.
+

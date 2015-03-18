@@ -24,7 +24,7 @@
 
 %% External
 start_link(App) ->
-    gen_server:start_link(echo, [App], []).
+    gen_server:start_link({local, ?MODULE}, ?MODULE, [App], []).
 
 %% API
 

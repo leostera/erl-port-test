@@ -77,3 +77,9 @@ collect_response(Port, RespAcc, LineAcc) ->
 
 handle_info({'EXIT', Port, Reason}, #state{port=Port}=State) ->
     {stop, {port_terminated, Reason}, State}.
+
+terminate({{port_terminated, _Reason}, _State}) ->
+    ok;
+terminate({_Reason, #state{port=Port}=_State}) ->
+    port_close(Port).
+    

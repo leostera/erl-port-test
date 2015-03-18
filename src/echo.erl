@@ -27,7 +27,7 @@ start_link(ExternalProgram) ->
 %% API
 
 echo(Message) ->
-    gen_server:call(?MODULE, {echo, sanitize(Message)}, get_timeout()).
+    gen_server:call(?MODULE, {echo, sanitize(Message)}, get_config(timeout)).
 
 sanitize(Message) ->
     case is_newline_terminated(Message) of
@@ -35,12 +35,8 @@ sanitize(Message) ->
         false -> erlang:error(no_newline)
     end.
 
-get_timeout() ->
-    {ok, Value} = application:get_env(echo_app, timeout),
-    Value.
-
-get_maxline() ->
-    {ok, Value} = application:get_env(echo_app, maxline),
+get_config(Name) ->
+    {ok, Value} = application:get_env(echo_app, Name),
     Value.
    
 is_newline_terminated([]) -> false;
@@ -54,5 +50,5 @@ count_chars(Char, Message) ->
 
 init(App) ->
     process_flag(trap_exit, true),
-    Port = open_port({spawn, App}, [stream, {line, get_maxline()}]),
+    Port = open_port({spawn, App}, [stream, {line, get_config(maxline)}]),
     {ok, #state{port=Port}}.

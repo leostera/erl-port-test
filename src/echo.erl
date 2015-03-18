@@ -53,7 +53,7 @@ init(App) ->
     Port = open_port({spawn, App}, [stream, {line, get_config(maxline)}]),
     {ok, #state{port=Port}}.
 
-handle_call({echo, Msg}, _From, #state{port = Port} = State) ->
+handle_call({echo, Msg}, _From, #state{port=Port}=State) ->
     port_command(Port, Msg),
     case collect_response(Port) of
         {response, Response} -> {reply, Response, State};
@@ -75,3 +75,5 @@ collect_response(Port, RespAcc, LineAcc) ->
           timeout
     end.
 
+handle_info({'EXIT', Port, Reason}, #state{port=Port}=State) ->
+    {stop, {port_terminated, Reason}, State}.

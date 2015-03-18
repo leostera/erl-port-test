@@ -33,7 +33,7 @@ echo(Message) ->
 
 sanitize(Message) ->
     case is_newline_terminated(Message) of
-        true  -> count_chars("\n", Message);
+        true  -> Message;
         false -> erlang:error(no_newline)
     end.
 
@@ -70,7 +70,7 @@ collect_response(Port, RespAcc, LineAcc) ->
             {response, lists:reverse(RespAcc)};
         {Port, {data, {eol, Result}}} ->
             Line = lists:reverse([Result|LineAcc]),
-            {response, lists:reverse([Line|RespAcc])};
+            collect_response(Port, [Line|RespAcc], []);
         {Port, {data, {noel, Result}}} ->
             collect_response(Port, RespAcc, [Result|LineAcc])
     after get_config(timeout) ->

@@ -1,6 +1,8 @@
 -module(echo).
 -author(ostera).
 
+-behavior(gen_server).
+
 %% External exports
 -export([start_link/1]).
 

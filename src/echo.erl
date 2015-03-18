@@ -17,10 +17,12 @@
          terminate/2
         ]).
 
+%% records
+-record(state, {port}).
+
 %% External
 start_link(ExternalProgram) ->
     gen_server:start_link({local, ?MODULE}, echo, ExternalProgram).
-
 
 %% API
 

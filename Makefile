@@ -1,0 +1,2 @@
+all:
+	erl -boot echo ./

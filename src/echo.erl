@@ -83,3 +83,4 @@ terminate({{port_terminated, _Reason}, _State}) ->
 terminate({_Reason, #state{port=Port}=_State}) ->
     port_close(Port).
     
+handle_cast(_Msg, State) -> {noreply, State}.
